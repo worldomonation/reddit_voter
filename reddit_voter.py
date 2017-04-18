@@ -66,8 +66,12 @@ class RedditClient:
             data = json.load(credentials)
             self.client_id = data['client_id']
             self.client_secret = data['client_secret']
-            self.username = data['username']
-            self.password = data['password']
+            if self.has_parameters:
+                self.username = sys.argv[1]
+                self.password = sys.argv[2]
+            else:
+                self.username = data['username']
+                self.password = data['password']
 
         '''
         Authentication phase.
@@ -127,6 +131,9 @@ class RedditClient:
 
 
 def main():
+    '''The main executable method of the program.
+    By design, the program will stay alive until either user decides to exit.
+    '''
     client = RedditClient()
     while client.keep_alive:
         module_to_run = int(input('Please select from the following options:\n'
@@ -143,4 +150,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    '''Calls the main() function inside a try-catch to handle KeyboardInterrupt
+    exceptions with a graceful exit.
+    '''
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit()
