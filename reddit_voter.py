@@ -14,7 +14,6 @@ correctly prior to use.
 Example:
     $ python3 reddit_voter.py
 
-
 '''
 
 import sys
@@ -57,6 +56,7 @@ class RedditClient:
         Raises:
             OAuthException:     If authentication fails using OAuth2.
             Forbidden:          If username is None.
+            KeyError:           If dictionary keys are not found.
         '''
 
         self.user_agent = 'just_a_normal_user'
@@ -64,14 +64,21 @@ class RedditClient:
 
         with open('credentials.json') as credentials:
             data = json.load(credentials)
-            self.client_id = data['client_id']
-            self.client_secret = data['client_secret']
-            if self.has_parameters:
+            self.client_id = data["client_id"]
+            self.client_secret = data["client_secret"]
+            if self.has_parameters():
                 self.username = sys.argv[1]
                 self.password = sys.argv[2]
+            elif self.has_parameters() == False and len(sys.argv) > 1:
+                print('Please provide both username and password!')
+                sys.exit()
             else:
-                self.username = data['username']
-                self.password = data['password']
+                try:
+                    self.username = data["username"]
+                    self.password = data["password"]
+                except KeyError:
+                    print('Password and/or username not defined in file!')
+                    sys.exit()
 
         '''
         Authentication phase.
@@ -125,9 +132,10 @@ class RedditClient:
     def prompt_user(self, user_input):
         return user_input in self.valid
 
-    def has_parameters():
-        if len(sys.argv) > 1:
+    def has_parameters(self):
+        if len(sys.argv) == 3:
             return True
+        return False
 
 
 def main():
