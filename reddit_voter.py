@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-'''This is an updated version of the reddit downvote bot.
-praw 4.4.1 compatible.
-Originally created by Kabalan over at https://redditbot.codeplex.com/
+'''This is a re-written & updated version of the reddit downvote bot.
+PRAW 4.4.1 compatible.
+Original idea created by Kabalan over at https://redditbot.codeplex.com/
 
 All prospective users should register a Script Type application at
 https://www.reddit.com/prefs/apps/ to obtain Client Secret and Client ID keys.
