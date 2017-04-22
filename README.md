@@ -43,6 +43,8 @@ It is possible to specify the username and password by directly supplying them a
 python3 reddit_voter.py username password
 ~~~~
 
+If invoked this way, reddit_voter will use supplied credentials instead. However, keep in mind the *client_secret* and *client_id* keys are tied to the account.
+
 # Disclaimer
 
 This tool is intended to be used for educational and/or proof-of-concept use only. Do not use this tool to commit malicious and/or criminal acts.
