@@ -116,7 +116,7 @@ class RedditClient:
             for comment in self.prog_bar(self.user.redditor(downvote_target).comments.new(limit=num_comments_to_downvote)):
                 comment.downvote()
         except:
-            print('Failed to downvote user: {0}').format(downvote_target)
+            print('Failed to downvote user: {0}. Check your inputs and try again.'.format(downvote_target))
 
     def upvote(self):
         '''The upvote module.
@@ -131,7 +131,7 @@ class RedditClient:
                                                 limit=num_comments_to_upvote)):
                 comment.upvote()
         except:
-            print('Failed to upvote user: {0}').format(upvote_target)
+            print('Failed to upvote user: {0}. Check your inputs and try again.'.format(upvote_target))
 
     def prompt_user(self, user_input):
         return user_input in self.valid
@@ -148,8 +148,12 @@ def main():
     '''
     client = RedditClient()
     while client.keep_alive:
-        module_to_run = int(input('Please select from the following options:\n'
+        module_to_run = None
+        try:
+            module_to_run = int(input('Please select from the following options:\n'
                                     '1. upvote a user\n2. downvote a user\n'))
+        except ValueError:
+            pass
         if module_to_run == 1:
             client.upvote()
         elif module_to_run == 2:
