@@ -72,7 +72,7 @@ class RedditClient:
                 self.username = sys.argv[1]
                 self.password = sys.argv[2]
             elif self.has_parameters() == False and len(sys.argv) > 1:
-                print('Please provide both username and password!')
+                print('Please provide both username and password!\n')
                 sys.exit()
             else:
                 try:
@@ -98,11 +98,14 @@ class RedditClient:
             else:
                 raise OAuthException
         except (OAuthException, Forbidden) as e:
-            print('---> Failed login due to {0}.'.format(type(e).__name__))
+            print('---> Failed login due to {0}: invalid credentials.'.format(type(e).__name__))
             sys.exit()
 
     def downvote(self):
         '''The downvote module.
+
+        Parameters:
+            None
 
         Returns:
             None
@@ -110,11 +113,10 @@ class RedditClient:
         try:
             downvote_target = input('Username of redditor to downvote: ')
             num_comments_to_downvote = int(input('Number of comments to downvote: '))
-            # prog_bar = progressbar.ProgressBar()
             for comment in self.prog_bar(self.user.redditor(downvote_target).comments.new(limit=num_comments_to_downvote)):
                 comment.downvote()
         except:
-            print('Failed to initialize downvote module!')
+            print('Failed to downvote user: {0}').format(downvote_target)
 
     def upvote(self):
         '''The upvote module.
@@ -125,12 +127,11 @@ class RedditClient:
         try:
             upvote_target = input('Username of redditor to upvote: ')
             num_comments_to_upvote = int(input('Number of comments to upvote: '))
-            # prog_bar = progressbar.ProgressBar()
             for comment in self.prog_bar(self.user.redditor(upvote_target).comments.new(
                                                 limit=num_comments_to_upvote)):
                 comment.upvote()
-        except Exception as e:
-            raise
+        except:
+            print('Failed to upvote user: {0}').format(upvote_target)
 
     def prompt_user(self, user_input):
         return user_input in self.valid
