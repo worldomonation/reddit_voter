@@ -11,7 +11,7 @@ python3 `reddit_voter`.py
 
 ## Dependencies
 
-`reddit_voter` depends on the PRAW, or [Python Reddit API Wrapper](https://github.com/praw-dev/praw) project to function.
+reddit_voter depends on PRAW, or [Python Reddit API Wrapper](https://github.com/praw-dev/praw) project to function.
 
 Simply install PRAW for Python 3.6 by invoking it from your favorite shell:
 
@@ -29,11 +29,11 @@ Here, create a new *script-type* application. Name it whatever you want, it does
 
 Once created, Reddit will generate two sets of seemingly random strings for you. One is a 27 character string and is named *client_secret*. The other is unlabeled on the front end, but is called *client_id* and is shown below the title of your application.
 
-Copy the two strings and save them into a file called `credentials.json` in the working directory of the script. `reddit_voter` will look for the file, and extract necessary login information to log in.
+Copy the two strings and save them into a file called `credentials.json` in the working directory of the script. reddit_voter will look for the file, and extract necessary login information to log in.
 
 ## *Optional Credentials*
 
-At a minimum, `reddit_voter` only requires that users save their *client_id* and *client_secret* keys into `credentials.json`. However, if users so desire, it is possible to create two additional keys in the file called *password* and *username*.
+At a minimum, reddit_voter only requires that users save their *client_id* and *client_secret* keys into `credentials.json`. However, if users so desire, it is possible to create two additional keys in the file called *password* and *username*.
 
 `reddit_voter` will look for both the username and password of the Reddit account if run without command line arguments.
 
