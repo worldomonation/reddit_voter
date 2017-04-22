@@ -22,6 +22,7 @@ import json
 
 import getpass
 import praw
+import progressbar
 
 from prawcore.exceptions import OAuthException, Forbidden
 
@@ -37,6 +38,7 @@ class RedditClient:
 
     user = None
     keep_alive = True
+    prog_bar = progressbar.ProgressBar()
     valid = {
         "yes": True,
         "y": True,
@@ -108,8 +110,8 @@ class RedditClient:
         try:
             downvote_target = input('Username of redditor to downvote: ')
             num_comments_to_downvote = int(input('Number of comments to downvote: '))
-            for comment in self.user.redditor(downvote_target).comments.new(
-                                                limit=num_comments_to_downvote):
+            # prog_bar = progressbar.ProgressBar()
+            for comment in self.prog_bar(self.user.redditor(downvote_target).comments.new(limit=num_comments_to_downvote)):
                 comment.downvote()
         except:
             print('Failed to initialize downvote module!')
@@ -123,8 +125,9 @@ class RedditClient:
         try:
             upvote_target = input('Username of redditor to upvote: ')
             num_comments_to_upvote = int(input('Number of comments to upvote: '))
-            for comment in self.user.redditor(upvote_target).comments.new(
-                                                limit=num_comments_to_upvote):
+            # prog_bar = progressbar.ProgressBar()
+            for comment in self.prog_bar(self.user.redditor(upvote_target).comments.new(
+                                                limit=num_comments_to_upvote)):
                 comment.upvote()
         except Exception as e:
             raise
