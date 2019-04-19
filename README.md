@@ -47,6 +47,30 @@ Create `credentials.json` as follows:
 }
 ~~~~
 
+## Dependencies
+
+`setup.py` will take care of the dependencies, but if desired, it is possible to install them yourself:
+
+~~~~
+pip3 install praw
+pip3 install progressbar
+~~~~
+
+## Credentials
+
+Prior to use, create a new `script` type applicaton on Reddit.
+
+Create `credentials.json` as follows:
+
+~~~~
+{
+    "client_id": <client_id_from_reddit>,.
+    "client_secret": <client_secret_from_reddit>,
+    "username": <reddit_username>,
+    "password": <reddit_password>
+}
+~~~~
+
 `reddit_voter` does not store or transmit your username/password in any way. Your credentials are safe and only used to authenticate with Reddit, which is a requirement.
 
 # Disclaimer
