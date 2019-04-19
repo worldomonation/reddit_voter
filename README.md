@@ -1,22 +1,23 @@
 # `reddit_voter`
-`reddit_voter` is a command-line tool implemented in Python 3.6 designed to make mass-voting on Reddit a breeze!
+`reddit_voter` is a command-line tool for Python 3 designed to make mass-voting on Reddit a breeze!
 
-## How does it work?
+## Run script
 
-Run `reddit_voter` by invoking the script via a command line:
+Invoke script via the command line:
 
 ~~~~
-python3 `reddit_voter`.py
+python3 reddit_voter.py
 ~~~~
 
 ## Dependencies
 
-reddit_voter depends on PRAW, or [Python Reddit API Wrapper](https://github.com/praw-dev/praw) project to function.
+`reddit_voter` depends on PRAW, or [Python Reddit API Wrapper](https://github.com/praw-dev/praw).
 
 Simply install PRAW for Python 3.6 by invoking it from your favorite shell:
 
 ~~~~
 pip3 install praw
+pip3 install progressbar
 ~~~~
 
 If any issues are encountered during installation of PRAW, please refer to their repository for some troubleshooting steps.
