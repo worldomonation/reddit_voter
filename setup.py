@@ -36,6 +36,6 @@ setup(
     entry_points="""
     # -*- Entry points: -*-
     [console_scripts]
-    voter = reddit_voter.reddit_voter:main
+    voter = reddit_voter.main:main
     """,
 )
