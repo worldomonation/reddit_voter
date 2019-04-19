@@ -1,31 +1,51 @@
 # `reddit_voter`
-`reddit_voter` is a command-line tool implemented in Python 3.6 designed to make mass-voting on Reddit a breeze!
+`reddit_voter` is a command-line tool for Python 3 designed to make mass-voting on Reddit a breeze!
 
-## How does it work?
+## Installation
 
-Run `reddit_voter` by invoking the script via a command line:
+Use the provided `setup.py` script:
 
 ~~~~
-python3 `reddit_voter`.py
+python3 setup.py
+~~~~
+
+## Run
+
+If installed as a package, run via:
+
+~~~~
+voter
+~~~~
+
+Otherwise, invoke script manually:
+
+~~~~
+python3 reddit_voter.py
 ~~~~
 
 ## Dependencies
 
-reddit_voter depends on PRAW, or [Python Reddit API Wrapper](https://github.com/praw-dev/praw) project to function.
-
-Simply install PRAW for Python 3.6 by invoking it from your favorite shell:
+`setup.py` will take care of the dependencies, but if desired, it is possible to install them yourself:
 
 ~~~~
 pip3 install praw
+pip3 install progressbar
 ~~~~
 
-If any issues are encountered during installation of PRAW, please refer to their repository for some troubleshooting steps.
+## Credentials
 
-## Authenticating
+Prior to use, create a new `script` type applicaton on Reddit.
 
-With dependencies installed and this repository cloned, you must now log into Reddit front-end to access the [apps](https://www.reddit.com/prefs/apps/) setting menu.
+Create `credentials.json` as follows:
 
-Here, create a new *script-type* application. Name it whatever you want, it does not matter.
+~~~~
+{
+    "client_id": <client_id_from_reddit>,.
+    "client_secret": <client_secret_from_reddit>,
+    "username": <reddit_username>,
+    "password": <reddit_password>
+}
+~~~~
 
 Once created, Reddit will generate two sets of seemingly random strings for you. One is a 27 character string and is named *client_secret*. The other is unlabeled on the front end, but is called *client_id* and is shown below the title of your application.
 
