@@ -11,9 +11,7 @@ python3 reddit_voter.py
 
 ## Dependencies
 
-`reddit_voter` depends on PRAW, or [Python Reddit API Wrapper](https://github.com/praw-dev/praw).
-
-Simply install PRAW for Python 3.6 by invoking it from your favorite shell:
+Install dependencies:
 
 ~~~~
 pip3 install praw
