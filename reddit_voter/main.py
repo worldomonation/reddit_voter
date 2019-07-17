@@ -8,6 +8,7 @@ from argparse import ArgumentParser
 def main():
     """The main executable method of the program.
     """
+
     args = build_parser()
     client = RedditClient(args)
 
@@ -41,13 +42,23 @@ def main():
 
 
 def build_parser():
+    """Builds a parser, used to accept user-specified parmeters.
+    """
     parser = ArgumentParser()
     parser.add_argument('-d', '--downvote',
                         action='store_true', help="Initiate downvote.")
     parser.add_argument('-u', '--upvote', action='store_true',
                         help="Initiate upvote.")
+    parser.add_argument('-n', '--count', action='store',
+                        default=5, help=" ".join([
+                            "Number of posts to upvote/downvote.",
+                            "Defaults to 5."
+                        ]))
     parser.add_argument('-c', '--credentials', action='store',
-                        default="credentials.json", help="Import credentials from file.")
+                        default="credentials.json", help=" ".join([
+                            "Import credentials from file.",
+                            "Defaults to credentials.json in the current directory."
+                        ]))
 
     args, _ = parser.parse_known_args()
     return args
