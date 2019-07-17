@@ -1,6 +1,10 @@
 import os
+import sys
 
 from setuptools import setup
+
+if sys.version_info < (2, 7) or sys.version_info < (3, 6):
+    sys.exit('Sorry, Python < 2.7 is not supported. Please use Python 3.7+.')
 
 MAJOR_VERSION = 0
 MINOR_VERSION = 0
