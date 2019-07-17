@@ -1,6 +1,9 @@
+import sys
+
 from reddit_voter.client import RedditClient
 
 from argparse import ArgumentParser
+
 
 def main():
     """The main executable method of the program.
@@ -8,21 +11,33 @@ def main():
     args = build_parser()
     client = RedditClient(args)
 
-    while client.keep_alive:
-        module_to_run = None
+    if args.downvote or args.upvote:
+        # Non-interactive command line
         try:
-            module_to_run = int(input('Please select from the following options:\n'
-                                      '1. upvote a user\n2. downvote a user\n'))
-        except ValueError:
             pass
-        if module_to_run == 1:
-            client.upvote()
-        elif module_to_run == 2:
-            client.downvote()
-        else:
-            print('You have made an invalid selection.\n')
-        client.keep_alive = client.prompt_user(input(
-            'Would you like to perform another action? [y/n]\n'))
+        except KeyboardInterrupt:
+            sys.exit(0)
+    else:
+        # Interactive command line
+        while True:
+            try:
+                module_to_run = None
+                try:
+                    module_to_run = int(input('Please select from the following options:\n'
+                                            '1. upvote a user\n2. downvote a user\n'))
+                except ValueError:
+                    pass
+                if module_to_run == 1:
+                    client.upvote()
+                elif module_to_run == 2:
+                    client.downvote()
+                else:
+                    print('You have made an invalid selection.\n')
+                keep_alive = client.prompt_user(input('Would you like to perform another action? [y/n]\n'))
+                if not keep_alive:
+                    sys.exit(0)
+            except KeyboardInterrupt:
+                sys.exit(0)
 
 
 def build_parser():
