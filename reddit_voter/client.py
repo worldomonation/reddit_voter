@@ -11,10 +11,8 @@ repository.
 """
 
 import sys
-import os
 import json
 
-import getpass
 import praw
 import progressbar
 
@@ -28,7 +26,6 @@ class RedditClient():
     """
 
     user = None
-    keep_alive = True
     prog_bar = progressbar.ProgressBar()
     valid = {
         "yes": True,
@@ -65,6 +62,8 @@ class RedditClient():
         self.username = None
         self.password = None
 
+        self.keep_alive = not any([args.upvote, args.downvote])
+
         with open(args.credentials) as credentials:
             data = json.load(credentials)
             self.client_id = data["client_id"]
@@ -72,7 +71,7 @@ class RedditClient():
             self.username = data["username"]
             self.password = data["password"]
 
-        self.authenticate()
+            self.authenticate()
 
     def authenticate(self):
         """Authenticates against Reddit.
@@ -95,7 +94,7 @@ class RedditClient():
                     'Supplied username does not match what Reddit returned.'
                 )
         except (OAuthException, Forbidden) as e:
-            print('---> Failed login due to {0}: invalid credentials.'.format(type(e).__name__))
+            print('Failed authentication: {}'.format(e.args))
             sys.exit()
 
     def downvote(self):
