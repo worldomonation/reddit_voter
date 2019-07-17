@@ -1,8 +1,7 @@
 import sys
+from argparse import ArgumentParser
 
 from reddit_voter.client import RedditClient
-
-from argparse import ArgumentParser
 
 
 def main():
@@ -25,7 +24,7 @@ def main():
                 module_to_run = None
                 try:
                     module_to_run = int(input('Please select from the following options:\n'
-                                            '1. upvote a user\n2. downvote a user\n'))
+                                              '1. upvote a user\n2. downvote a user\n'))
                 except ValueError:
                     pass
                 if module_to_run == 1:
@@ -34,7 +33,9 @@ def main():
                     client.downvote()
                 else:
                     print('You have made an invalid selection.\n')
-                keep_alive = client.prompt_user(input('Would you like to perform another action? [y/n]\n'))
+                keep_alive = client.prompt_user(
+                    input('Would you like to perform another action? [y/n]\n')
+                )
                 if not keep_alive:
                     sys.exit(0)
             except KeyboardInterrupt:

@@ -10,14 +10,15 @@ For information on how to use, please see the README file at the root of this
 repository.
 """
 
-import sys
 import json
+import sys
+from argparse import ArgumentError
 
 import praw
-import progressbar
 
-from argparse import ArgumentParser, ArgumentError
-from prawcore.exceptions import OAuthException, Forbidden
+from prawcore.exceptions import Forbidden, OAuthException
+
+import progressbar
 
 
 class RedditClient():
@@ -95,12 +96,12 @@ class RedditClient():
                 print('---> Successfully authenticated against Reddit as {0}.'.format(
                     self.user.user.me())
                 )
-            else:
-                raise OAuthException(
-                    'Supplied username does not match what Reddit returned.'
-                )
+            # else:
+            #     raise OAuthException(
+            #         'Supplied username does not match what Reddit returned.'
+            #     )
         except (OAuthException, Forbidden) as e:
-            print('Failed authentication: {}'.format(e.args))
+            print('Failed authentication: {}'.format(e.error))
             sys.exit()
 
     def downvote(self):
@@ -112,7 +113,9 @@ class RedditClient():
         try:
             downvote_target = input('Username of redditor to downvote: ')
             num_comments_to_downvote = int(input('Number of comments to downvote: '))
-            for comment in self.prog_bar(self.user.redditor(downvote_target).comments.new(limit=num_comments_to_downvote)):
+            for comment in self.prog_bar(
+                    self.user.redditor(downvote_target).comments.new(
+                        limit=num_comments_to_downvote)):
                 comment.downvote()
         except:
             print('Failed to downvote user: {0}. Check your inputs and try again.'.format(downvote_target))
