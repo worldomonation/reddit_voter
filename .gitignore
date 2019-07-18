@@ -75,6 +75,7 @@ target/
 
 # credentials
 credentials.json
+praw.ini
 
 # celery beat schedule file
 celerybeat-schedule
