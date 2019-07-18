@@ -16,7 +16,7 @@ from argparse import ArgumentError
 
 import praw
 
-from prawcore.exceptions import Forbidden, OAuthException
+from prawcore.exceptions import Forbidden, OAuthException, ResponseException
 
 import progressbar
 
@@ -70,10 +70,10 @@ class RedditClient():
         try:
             with open(args.credentials) as credentials:
                 data = json.load(credentials)
-                self.client_id = data["client_id"]
-                self.client_secret = data["client_secret"]
-                self.username = data["username"]
-                self.password = data["password"]
+                self.client_id = data['client_id']
+                self.client_secret = data['client_secret']
+                self.username = data.get('username')
+                self.password = data.get('password')
         except FileNotFoundError:
             print(f'Specified credentials file at {args.credentials} does not exist.')
             sys.exit(1)
@@ -92,17 +92,17 @@ class RedditClient():
                                     client_secret=self.client_secret,
                                     password=self.password,
                                     username=self.username)
-            if self.user.user.me() == self.username:
+        except (OAuthException, Forbidden) as e:
+            print(f'Failed authentication: {e.error}')
+            sys.exit(1)
+        except ResponseException as e:
+            print(f'Failed authentication: {e.response.reason}')
+            sys.exit(1)
+        finally:
+            if self.user.user.me() is not None:
                 print('---> Successfully authenticated against Reddit as {0}.'.format(
                     self.user.user.me())
                 )
-            # else:
-            #     raise OAuthException(
-            #         'Supplied username does not match what Reddit returned.'
-            #     )
-        except (OAuthException, Forbidden) as e:
-            print('Failed authentication: {}'.format(e.error))
-            sys.exit()
 
     def downvote(self):
         """The downvote module.
@@ -117,6 +117,8 @@ class RedditClient():
                     self.user.redditor(downvote_target).comments.new(
                         limit=num_comments_to_downvote)):
                 comment.downvote()
+        except ValueError:
+            print('Number of comments must be an integer.')
         except:
             print('Failed to downvote user: {0}. Check your inputs and try again.'.format(downvote_target))
 
@@ -132,6 +134,8 @@ class RedditClient():
             for comment in self.prog_bar(self.user.redditor(upvote_target).comments.new(
                                                 limit=num_comments_to_upvote)):
                 comment.upvote()
+        except ValueError:
+            print('Number of comments must be an integer.')
         except:
             print('Failed to upvote user: {0}. Check your inputs and try again.'.format(upvote_target))
 

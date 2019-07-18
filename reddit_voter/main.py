@@ -1,3 +1,4 @@
+import os
 import sys
 from argparse import ArgumentParser
 
@@ -42,6 +43,32 @@ def main():
                 sys.exit(0)
 
 
+def default_credentials_exist():
+    """Determines if credentials file exists in the current working directory.
+
+    If one of the following is found, it returns the path to the file:
+        - credentials.json
+        - praw.ini
+
+    If both files are found, by default `praw.ini` is used.
+
+    Args:
+        None
+
+    Returns:
+        path (str):     String representation of the path to located credential file.
+    """
+    credentials_in_cwd = [
+        os.path.join(os.getcwd(), 'credentials.json'),
+        os.path.join(os.getcwd(), 'praw.ini')
+    ]
+    credentials_exists = list(map(os.path.exists, credentials_in_cwd))
+    if all(credentials_exists):
+        return credentials_in_cwd[-1]
+    else:
+        return credentials_in_cwd[credentials_exists.index(True)]
+
+
 def build_parser():
     """Builds a parser, used to accept user-specified parmeters.
     """
@@ -56,9 +83,9 @@ def build_parser():
                             "Defaults to 5."
                         ]))
     parser.add_argument('-c', '--credentials', action='store',
-                        default="credentials.json", help=" ".join([
+                        default=default_credentials_exist(), help=" ".join([
                             "Import credentials from file.",
-                            "Defaults to credentials.json in the current directory."
+                            "Defaults to credentials.json or praw.ini in the current directory."
                         ]))
 
     args, _ = parser.parse_known_args()
