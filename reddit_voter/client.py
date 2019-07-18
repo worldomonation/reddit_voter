@@ -16,6 +16,7 @@ from argparse import ArgumentError
 
 import praw
 
+from praw.exceptions import ClientException
 from prawcore.exceptions import Forbidden, OAuthException, ResponseException
 
 import progressbar
@@ -58,25 +59,27 @@ class RedditClient():
         """
 
         self.user_agent = 'just_a_normal_user'
+        self.ini = None
         self.client_id = None
         self.client_secret = None
         self.username = None
         self.password = None
 
-        if not args.credentials:
-            raise ArgumentError(args.credentials,
-                                'Missing credentials.json or path to credentials file.')
-
-        try:
-            with open(args.credentials) as credentials:
-                data = json.load(credentials)
-                self.client_id = data['client_id']
-                self.client_secret = data['client_secret']
-                self.username = data.get('username')
-                self.password = data.get('password')
-        except FileNotFoundError:
-            print(f'Specified credentials file at {args.credentials} does not exist.')
-            sys.exit(1)
+        if args.json:
+            try:
+                with open(args.credentials) as credentials:
+                    data = json.load(credentials)
+                    self.client_id = data['client_id']
+                    self.client_secret = data['client_secret']
+                    self.username = data.get('username')
+                    self.password = data.get('password')
+            except FileNotFoundError:
+                print(f'Specified credentials file at {args.credentials} does not exist.')
+                sys.exit(1)
+        elif args.ini:
+            self.ini = args.ini
+        else:
+            self.ini = 'DEFAULT'
 
         self.authenticate()
 
@@ -86,23 +89,34 @@ class RedditClient():
         This will create an instance of a reddit user from credentials provided.
         """
         print('---> Authenticating against Reddit.')
+
         try:
-            self.user = praw.Reddit(user_agent=self.user_agent,
-                                    client_id=self.client_id,
-                                    client_secret=self.client_secret,
-                                    password=self.password,
-                                    username=self.username)
+            if self.ini:
+                self.user = praw.Reddit(site_name=self.ini,
+                                        user_agent=self.user_agent)
+            else:
+                self.user = praw.Reddit(user_agent=self.user_agent,
+                                        client_id=self.client_id,
+                                        client_secret=self.client_secret,
+                                        password=self.password,
+                                        username=self.username)
+        except ClientException as e:
+            print(" ".join([
+                "DEFAULT credentials missing from praw.ini.",
+                "Either define DEFAULT credentials or specify a credential set using --ci flag."
+            ]))
+            sys.exit(1)
         except (OAuthException, Forbidden) as e:
             print(f'Failed authentication: {e.error}')
             sys.exit(1)
         except ResponseException as e:
             print(f'Failed authentication: {e.response.reason}')
             sys.exit(1)
-        finally:
-            if self.user.user.me() is not None:
-                print('---> Successfully authenticated against Reddit as {0}.'.format(
-                    self.user.user.me())
-                )
+            
+        if self.user.user.me() is not None:
+            print('---> Successfully authenticated against Reddit as {0}.'.format(
+                self.user.user.me())
+            )
 
     def downvote(self):
         """The downvote module.

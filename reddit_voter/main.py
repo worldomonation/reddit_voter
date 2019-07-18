@@ -71,6 +71,9 @@ def default_credentials_exist():
 
 def build_parser():
     """Builds a parser, used to accept user-specified parmeters.
+
+    Returns:
+        args (Namespace):   Parsed command line arguments.
     """
     parser = ArgumentParser()
     parser.add_argument('-d', '--downvote',
@@ -82,10 +85,13 @@ def build_parser():
                             "Number of posts to upvote/downvote.",
                             "Defaults to 5."
                         ]))
-    parser.add_argument('-c', '--credentials', action='store',
-                        default=default_credentials_exist(), help=" ".join([
-                            "Import credentials from file.",
-                            "Defaults to credentials.json or praw.ini in the current directory."
+    parser.add_argument('-cj', '--json', action='store',
+                        default=None, help=" ".join([
+                            "Imports credentials from credentials.json file."
+                        ]))
+    parser.add_argument('-ci', '--ini', action='store',
+                        default=None, help=" ".join([
+                            "Imports specified configuration name from praw.ini file.",
                         ]))
 
     args, _ = parser.parse_known_args()
