@@ -19,27 +19,28 @@ def main():
         except KeyboardInterrupt:
             sys.exit(0)
     else:
+        print('Welcome to interactive reddit voter.\n')
         # Interactive command line
         while True:
             try:
-                module_to_run = None
-                try:
-                    module_to_run = int(input('Please select from the following options:\n'
-                                              '1. upvote a user\n2. downvote a user\n'))
-                except ValueError:
-                    pass
+                module_to_run = int(input('Select from the following options:\n'
+                                          '1. upvote a user\n2. downvote a user\n'))
                 if module_to_run == 1:
                     client.upvote()
                 elif module_to_run == 2:
                     client.downvote()
                 else:
-                    print('You have made an invalid selection.\n')
-                keep_alive = client.prompt_user(
-                    input('Would you like to perform another action? [y/n]\n')
-                )
-                if not keep_alive:
-                    sys.exit(0)
+                    raise ValueError(f'Invalid input detected: {module_to_run}')
             except KeyboardInterrupt:
+                sys.exit(0)
+            except ValueError as e:
+                invalid_literal = e.args[0].split(': ')[1]
+                print(f'Invalid input detected: {invalid_literal}\n')
+
+            user_input = str(input('Perform another action? [y/n]\n'))
+            keep_alive = client.prompt_user(user_input)
+
+            if not keep_alive:
                 sys.exit(0)
 
 

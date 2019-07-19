@@ -112,7 +112,7 @@ class RedditClient():
         except ResponseException as e:
             print(f'Failed authentication: {e.response.reason}')
             sys.exit(1)
-            
+
         if self.user.user.me() is not None:
             print('---> Successfully authenticated against Reddit as {0}.'.format(
                 self.user.user.me())
