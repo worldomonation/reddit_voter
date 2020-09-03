@@ -16,7 +16,7 @@ from argparse import ArgumentError
 
 import praw
 
-from praw.exceptions import ClientException
+from praw.exceptions import APIException, ClientException
 from prawcore.exceptions import Forbidden, OAuthException, ResponseException
 
 import progressbar
@@ -28,7 +28,6 @@ class RedditClient():
     """
 
     user = None
-    prog_bar = progressbar.ProgressBar()
     valid = {
         "yes": True,
         "y": True,
@@ -118,40 +117,15 @@ class RedditClient():
                 self.user.user.me())
             )
 
-    def downvote(self):
-        """The downvote module.
-
-        Returns:
-            None
+    def vote(self, action, target, num_comments):
+        """
         """
         try:
-            downvote_target = input('Username of redditor to downvote: ')
-            num_comments_to_downvote = int(input('Number of comments to downvote: '))
-            for comment in self.prog_bar(
-                    self.user.redditor(downvote_target).comments.new(
-                        limit=num_comments_to_downvote)):
-                comment.downvote()
-        except ValueError:
-            print('Number of comments must be an integer.')
-        except:
-            print('Failed to downvote user: {0}. Check your inputs and try again.'.format(downvote_target))
-
-    def upvote(self):
-        """The upvote module.
-
-        Returns:
-            None
-        """
-        try:
-            upvote_target = input('Username of redditor to upvote: ')
-            num_comments_to_upvote = int(input('Number of comments to upvote: '))
-            for comment in self.prog_bar(self.user.redditor(upvote_target).comments.new(
-                                                limit=num_comments_to_upvote)):
-                comment.upvote()
-        except ValueError:
-            print('Number of comments must be an integer.')
-        except:
-            print('Failed to upvote user: {0}. Check your inputs and try again.'.format(upvote_target))
+            for index, comment in progressbar.progressbar(enumerate(self.user.redditor(target).comments.new(limit=num_comments))):
+                method = getattr(comment, action, None)
+                method()
+        except APIException:
+            print('Failed to {} comment {}'.format(action, index+1))
 
     def prompt_user(self, user_input):
         return user_input in self.valid

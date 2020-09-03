@@ -17,7 +17,7 @@ with open(os.path.join(os.path.dirname(
 DEPENDENCIES = [
     'flake8',
     'praw',
-    'progressbar'
+    'progressbar2'
 ]
 
 setup(

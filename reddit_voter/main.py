@@ -4,6 +4,10 @@ from argparse import ArgumentParser
 
 from reddit_voter.client import RedditClient
 
+action = {
+    1: 'upvote',
+    0: 'downvote'
+}
 
 def main():
     """The main executable method of the program.
@@ -24,13 +28,11 @@ def main():
         while True:
             try:
                 module_to_run = int(input('Select from the following options:\n'
-                                          '1. upvote a user\n2. downvote a user\n'))
-                if module_to_run == 1:
-                    client.upvote()
-                elif module_to_run == 2:
-                    client.downvote()
-                else:
-                    raise ValueError(f'Invalid input detected: {module_to_run}')
+                                          '1. upvote a user\n2. downvote a user\n')) % 2
+                target = str(input('Target username: '))
+                num_comments = int(input('Number of comments: '))
+
+                client.vote(action.get(module_to_run, None), target, num_comments)
             except KeyboardInterrupt:
                 sys.exit(0)
             except ValueError as e:
